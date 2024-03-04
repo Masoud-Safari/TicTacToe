@@ -20,9 +20,9 @@ enum GameState {
 class Board {
     var state: [Player?]
     var nextStates: [Board] = []
-    var previousState: Board? = nil
     var nextPlayer: Player
-    var gameState: GameState
+    var gameState: GameState = .notFinished
+    var winCombination: [Int]? = nil
     private var _score: Int? = nil
     
     var score: Int {
@@ -60,33 +60,39 @@ class Board {
     init(_ board: [Player?], nextPlayer: Player) {
         self.state = board
         self.nextPlayer = nextPlayer
-        self.gameState = Board.checkGameState(for: board)
+        self.setGameState()
         self.nextStates = self.getNextStates()
     }
     
-    static func checkGameState(for board: [Player?]) -> GameState {
+    func setGameState() {
         let winCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                                [0, 3, 6], [1, 4, 7], [2, 5, 8],
                                [0, 4, 8], [2, 4, 6]]
         
         for winCombination in winCombinations {
-            if board[winCombination[0]] == board[winCombination[1]] &&
-                board[winCombination[1]] == board[winCombination[2]] {
-                if board[winCombination[0]] == .o {
-                    return .o
-                } else if board[winCombination[0]] == .x {
-                    return .x
+            if self.state[winCombination[0]] == self.state[winCombination[1]] &&
+                self.state[winCombination[1]] == self.state[winCombination[2]] {
+                if self.state[winCombination[0]] == .o {
+                    self.gameState = .o
+                    self.winCombination = winCombination
+                    return
+                } else if self.state[winCombination[0]] == .x {
+                    self.gameState = .x
+                    self.winCombination = winCombination
+                    return
                 }
             }
         }
         
-        for cell in board {
+        for cell in self.state {
             if cell == nil {
-                return .notFinished
+                self.gameState = .notFinished
+                return
             }
         }
         
-        return .draw
+        self.gameState = .draw
+        return
     }
     
     func getNextStates() -> [Board] {
@@ -99,7 +105,6 @@ class Board {
                     var tempState = self.state
                     tempState[i] = nextPlayer
                     let newState = Board(tempState, nextPlayer: nextNextPlayer)
-                    newState.previousState = self
                     result.append(newState)
                 }
             }
@@ -108,13 +113,11 @@ class Board {
     }
 }
 
-
+@Observable
 class TicTacToe: CustomStringConvertible {
     var root: Board
-    var firstPlayer: Player
     
     init(firstPlayer: Player) {
-        self.firstPlayer = firstPlayer
         self.root = Board([nil, nil, nil, nil, nil, nil, nil, nil, nil], nextPlayer: firstPlayer == .o ? .o : .x)
         
         if firstPlayer == .o {
@@ -139,9 +142,9 @@ class TicTacToe: CustomStringConvertible {
         return "\(p[0])|\(p[1])|\(p[2])\n\(p[3])|\(p[4])|\(p[5])\n\(p[6])|\(p[7])|\(p[8])\n"
     }
     
-    func play(_ cellNumber: Int) -> [Player?] {
+    func play(_ cellNumber: Int) {
         guard self.root.gameState == .notFinished else {
-            return self.root.state
+            return
         }
         
         if self.root.state[cellNumber] == nil {
@@ -154,11 +157,20 @@ class TicTacToe: CustomStringConvertible {
             }
             
             guard self.root.gameState == .notFinished else {
-                return self.root.state
+                return
             }
             
             // Next computer move
-            // Check for score 1
+            
+            // Check for win condition
+            for i in 0..<self.root.nextStates.count {
+                if self.root.nextStates[i].gameState == .o {
+                    self.root = self.root.nextStates[i]
+                    return
+                }
+            }
+            
+            // If there were no win condition, check for score 1
             var nextMoveIndices: [Int] = []
             for i in 0..<self.root.nextStates.count {
                 if self.root.nextStates[i].score == 1 {
@@ -174,10 +186,8 @@ class TicTacToe: CustomStringConvertible {
                     }
                 }
             }
-            print(nextMoveIndices)
+            
             self.root = self.root.nextStates[nextMoveIndices.randomElement()!]
         }
-        
-        return self.root.state
     }
 }

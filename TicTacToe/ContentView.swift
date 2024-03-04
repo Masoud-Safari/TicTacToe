@@ -8,10 +8,7 @@
 import Observation
 import SwiftUI
 
-//enum Player: CaseIterable {
-//    case x, o
-//}
-
+// Draw a line with given start and end point
 struct Line: View {
     var startPoint: CGPoint
     var endPoint: CGPoint
@@ -24,18 +21,40 @@ struct Line: View {
     }
 }
 
+// Draw the game board based on the current state of given game.
 struct BoardView: View {
-    let board: [Player?]
+    let ticTacToe: TicTacToe
     var click: (Int) -> Void
     
-    init(_ board: [Player?], click: @escaping (Int) -> Void) {
-        self.board = board
+    let message: String
+    let messageColor: Color
+    
+    init(_ ticTacToe: TicTacToe, click: @escaping (Int) -> Void) {
+        self.ticTacToe = ticTacToe
         self.click = click
+        if ticTacToe.root.gameState == .o {
+            self.message = "You Lost!"
+            self.messageColor = .red
+        } else if ticTacToe.root.gameState == .x {
+            self.message = "You Won!"
+            self.messageColor = .green
+        } else if ticTacToe.root.gameState == .draw {
+            self.message = "Draw!"
+            self.messageColor = .black
+        } else {
+            self.message = ""
+            self.messageColor = .black
+        }
     }
     
     var body: some View {
         ZStack {
             Color.white
+            
+            Text(message)
+                .foregroundStyle(messageColor)
+                .font(.headline)
+                .offset(y: -80)
             
             Line(startPoint: CGPoint(x: 80, y: 40), endPoint: CGPoint(x: 80, y: 160))
             Line(startPoint: CGPoint(x: 120, y: 40), endPoint: CGPoint(x: 120, y: 160))
@@ -47,7 +66,7 @@ struct BoardView: View {
                     Button {
                         click(3 * j + i)
                     } label: {
-                        if let a = board[3 * j + i] {
+                        if let a = self.ticTacToe.root.state[3 * j + i] {
                             if a == .x {
                                 Image(systemName: "xmark")
                                     .font(.largeTitle)
@@ -68,6 +87,13 @@ struct BoardView: View {
                     .focusEffectDisabled()
                 }
             }
+            
+            if let winComb = self.ticTacToe.root.winCombination {
+                Line(
+                    startPoint: CGPoint(x: 40 * CGFloat(winComb[0] % 3) + 60, y: 40 * CGFloat(winComb[0] / 3) + 60),
+                    endPoint: CGPoint(x: 40 * CGFloat(winComb[2] % 3) + 60, y: 40 * CGFloat(winComb[2] / 3) + 60)
+                )
+            }
         }
         .frame(width: 200, height: 200)
         .preferredColorScheme(.light)
@@ -76,17 +102,21 @@ struct BoardView: View {
 
 struct ContentView: View {
     @State private var game: TicTacToe
-    @State private var board: [Player?] = [nil, nil, nil, nil, nil, nil, nil, nil, nil]
     
     init() {
-        self.game = TicTacToe(firstPlayer: .o)
-//        self.board = [nil, nil, nil, nil, nil, nil, nil, nil, nil]
-        self.board = self.game.root.state
+        self.game = TicTacToe(firstPlayer: .x)
     }
     
     var body: some View {
-        BoardView(board) { x in
-            self.board = game.play(x)
+        ZStack {
+            BoardView(game) { cell in
+                game.play(cell)
+            }
+            
+            Button("Reset") {
+                self.game = TicTacToe(firstPlayer: Player.allCases.randomElement()!)
+            }
+            .offset(y: 80)
         }
     }
 }

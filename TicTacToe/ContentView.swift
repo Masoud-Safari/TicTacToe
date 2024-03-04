@@ -35,6 +35,8 @@ struct BoardView: View {
     
     var body: some View {
         ZStack {
+            Color.white
+            
             Line(startPoint: CGPoint(x: 80, y: 40), endPoint: CGPoint(x: 80, y: 160))
             Line(startPoint: CGPoint(x: 120, y: 40), endPoint: CGPoint(x: 120, y: 160))
             Line(startPoint: CGPoint(x: 40, y: 80), endPoint: CGPoint(x: 160, y: 80))
@@ -56,7 +58,7 @@ struct BoardView: View {
                                     .foregroundStyle(.blue)
                             }
                         } else {
-                            Color(red: 239/255, green: 239/255, blue: 239/255)
+                            Color.white
                                 .frame(width: 38, height: 38)
                         }
                     }

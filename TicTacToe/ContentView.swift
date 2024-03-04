@@ -8,9 +8,9 @@
 import Observation
 import SwiftUI
 
-enum Player: CaseIterable {
-    case x, o
-}
+//enum Player: CaseIterable {
+//    case x, o
+//}
 
 struct Line: View {
     var startPoint: CGPoint
@@ -75,11 +75,18 @@ struct BoardView: View {
 }
 
 struct ContentView: View {
-    @State private var board: [Player?] = [.x, nil, .x, nil, .o, .o, nil, nil, nil]
+    @State private var game: TicTacToe
+    @State private var board: [Player?] = [nil, nil, nil, nil, nil, nil, nil, nil, nil]
+    
+    init() {
+        self.game = TicTacToe(firstPlayer: .o)
+//        self.board = [nil, nil, nil, nil, nil, nil, nil, nil, nil]
+        self.board = self.game.root.state
+    }
     
     var body: some View {
         BoardView(board) { x in
-            print(x)
+            self.board = game.play(x)
         }
     }
 }

@@ -11,6 +11,7 @@
 		C57978E22B89A8880043D8BE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57978E12B89A8880043D8BE /* ContentView.swift */; };
 		C57978E42B89A88B0043D8BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C57978E32B89A88B0043D8BE /* Assets.xcassets */; };
 		C57978E82B89A88B0043D8BE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C57978E72B89A88B0043D8BE /* Preview Assets.xcassets */; };
+		C580F8172B95BDC400253EEA /* TicTacTieGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580F8162B95BDC400253EEA /* TicTacTieGame.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		C57978E32B89A88B0043D8BE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C57978E52B89A88B0043D8BE /* TicTacToe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TicTacToe.entitlements; sourceTree = "<group>"; };
 		C57978E72B89A88B0043D8BE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C580F8162B95BDC400253EEA /* TicTacTieGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacTieGame.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				C57978DF2B89A8880043D8BE /* TicTacToeApp.swift */,
 				C57978E12B89A8880043D8BE /* ContentView.swift */,
+				C580F8162B95BDC400253EEA /* TicTacTieGame.swift */,
 				C57978E32B89A88B0043D8BE /* Assets.xcassets */,
 				C57978E52B89A88B0043D8BE /* TicTacToe.entitlements */,
 				C57978E62B89A88B0043D8BE /* Preview Content */,
@@ -139,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C580F8172B95BDC400253EEA /* TicTacTieGame.swift in Sources */,
 				C57978E22B89A8880043D8BE /* ContentView.swift in Sources */,
 				C57978E02B89A8880043D8BE /* TicTacToeApp.swift in Sources */,
 			);

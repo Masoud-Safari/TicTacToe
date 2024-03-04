@@ -13,5 +13,6 @@ struct TicTacToeApp: App {
         WindowGroup {
             ContentView()
         }
+        .windowResizability(.contentSize)
     }
 }
